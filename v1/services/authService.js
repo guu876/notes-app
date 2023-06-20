@@ -2,16 +2,12 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const Jwt = require('../../utils/jwt');
 
-const validatePassword = (password, encryptedPassword) => {
-    return bcrypt.compare(password, encryptedPassword);
-}
-
 module.exports = {
 
     authenticate: async(username, password) => {
         const user = await User.findOne({username}).exec();
-    
-        if (!user || !validatePassword(password, user.password) ) {
+     
+        if (!user || (await user.validatePassword(password, user.password)) === false ) {
             return [false, 'Incorrect username/password.'];
         }
        
@@ -32,8 +28,15 @@ module.exports = {
 
     },
 
-    logout: () => {
-
-    }
+    logout: async(authorization) => {
+        const split = authorization.split('Bearer ');
+        const token = split[1];
+        const user = await User.findOne({token}).select('-password').exec();
+        if (user) {
+            user.token = '';
+            if (user.save()) return true;
+        }
+        return false;
+    },
 
 };
