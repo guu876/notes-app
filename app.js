@@ -15,7 +15,6 @@ connectDB();
 
 app.use(express.json());
 
-app.use("/v1/users", require("./v1/routes/userRoutes"));
-app.use("/auth", require("./v1/routes/authRoutes"));
+app.use('', require('./v1/routes/index'));
 
 module.exports = app;
