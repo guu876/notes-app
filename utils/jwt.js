@@ -7,7 +7,7 @@ class Jwt {
   }
 
   static VerifyAccessToken(token, payload) {
-    return jwt.VerifyAccessToken(token, process.env.ACCESS_TOKEN);
+    return jwt.verify(token, process.env.ACCESS_TOKEN);
   }
 }
 

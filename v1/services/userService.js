@@ -15,6 +15,10 @@ module.exports = {
             password: hashedPassword
         }));
 
+    },
+
+    get: async(filter = {}) => {
+        return filter.hasOwnProperty('id') ? (await User.findById(filter.id).select('-password').lean()) : (await User.find(filter).select('-password'));
     }
 
 };
